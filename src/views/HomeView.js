@@ -27,7 +27,7 @@ export class HomeView extends React.Component {
   static propTypes = {
     actions: React.PropTypes.object,
     counter: React.PropTypes.number
-  }
+  };
 
   constructor(props) {
     super(props);
@@ -35,32 +35,40 @@ export class HomeView extends React.Component {
       searchResults: [],
       failedLookup: false
     });
-    this.debounced = _.debounce((e) => {
-      if (!e.target.value) {
-        this.setState({
-          searchResults: [],
-          failedLookup: false
-        });
-        this.forceUpdate();
-      } else {
-        $.ajax({
-          url: 'http://en.wikipedia.org/w/api.php',
-          dataType: 'jsonp',
-          data: {
-            action: 'opensearch',
-            format: 'json',
-            search: encodeURI(e.target.value)
-          }
-        })
-          .done((data) => {
-            this.setState({
-              searchResults: data[1]
-            });
-          });
-      }
-    }, 500);
+    this.lookup = _.debounce((e) => {
+      this.debouncedLookup(e);
+    }, 500).bind(this);
 
     this.handleInput = this.handleInput.bind(this);
+  }
+
+  handleInput(e) {
+    e.persist();
+    this.lookup(e);
+  }
+
+  debouncedLookup(e) {
+    if(!e.target.value) {
+      this.setState({
+        searchResult: [],
+        failedLookup: false
+      });
+    } else {
+      $.ajax({
+        url: 'http://en.wikipedia.org/w/api.php',
+        dataType: 'jsonp',
+        data: {
+          action: 'opensearch',
+          format: 'json',
+          search: encodeURI(e.target.value)
+        }
+      })
+      .done((data) => {
+        this.setState({
+          searchResults: data[1]
+        });
+      });
+    }
   }
 
   //  componentWillMount() {
@@ -95,10 +103,6 @@ export class HomeView extends React.Component {
   //    });
   //  }
 
-  handleInput(e) {
-    e.persist();
-    this.debounced(e);
-  }
 
   render() {
     //    return (
@@ -115,6 +119,8 @@ export class HomeView extends React.Component {
     //      </button>
     //      </div>
     //    );
+    // todo
+
 
     const results = this.state.searchResults;
     let toDisplay;
