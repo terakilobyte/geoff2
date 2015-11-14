@@ -115,7 +115,6 @@ export class HomeView extends React.Component {
     //      </button>
     //      </div>
     //    );
-    //
 
     const results = this.state.searchResults;
     let toDisplay;
