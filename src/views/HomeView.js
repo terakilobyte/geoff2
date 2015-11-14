@@ -52,11 +52,11 @@ export class HomeView extends React.Component {
             search: encodeURI(e.target.value)
           }
         })
-        .done((data) => {
-          this.setState({
-            searchResults: data[1]
+          .done((data) => {
+            this.setState({
+              searchResults: data[1]
+            });
           });
-        });
       }
     }, 500);
 
@@ -122,7 +122,7 @@ export class HomeView extends React.Component {
     if (results.length) {
       toDisplay = results.map((elem, ix) => {
         return (
-          <p key={ix}><a href={'http://en.wikipedia.org/wiki/' + elem}>{elem}
+            <p key={ix}><a href={'http://en.wikipedia.org/wiki/' + elem}>{elem}
           </a></p>
         );
       });
@@ -130,8 +130,14 @@ export class HomeView extends React.Component {
       toDisplay = <p>No results found</p>;
     }
 
+    //    return (
+    //      <div className='col-xs-12'>
+    //        <input className='search-box' type='text' onChange={this.handleInput}/>
+    //        {toDisplay}
+    //      </div>
+    //    );
     return (
-      <div className='col-xs-12'>
+        <div className='col-xs-12'>
         <input className='search-box' type='text' onChange={this.handleInput}/>
         {toDisplay}
       </div>
